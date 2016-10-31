@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+if [[ -n ${BASH_VERSION+x} ]]; then
+    _EMGR_install_dir="${BASH_SOURCE[0]}"
+    _EMGR_install_dir=`readlink -f "$_EMGR_install_dir"`
+    export _EMGR_install_dir=`dirname "$_EMGR_install_dir"`
+
+    source $_EMGR_install_dir/setup.bash
+elif [[ -n ${ZSH_VERSION+x} ]]; then
+    export _EMGR_install_dir=${0:a:h}
+
+    source $_EMGR_install_dir/setup.zsh
+fi
+
+function _EMGR_restore() {
+    echo "Restoring from $_EMGR_env_backup"
+    _EMGR_clear_env
+    source "$_EMGR_env_backup"
+}
+
+function _EMGR_save() {
+    mkdir -p "/tmp/emgr/$USER"
+    export _EMGR_env_backup=`mktemp /tmp/emgr/$USER/XXXXXXXX.sh`
+    # Call shell-specific env-saving function
+    _EMGR_write_env "$_EMGR_env_backup"
+}
+
+function _EMGR_load() {
+    if [[ -n ${_EMGR_env_current+x} ]]; then
+        _EMGR_restore
+    else
+        _EMGR_save
+    fi
+
+    export _EMGR_env_current="$1"
+
+    source "$_EMGR_install_dir/load_env"
+}
+
+function _EMGR_list_envs() {
+    local env_dir=
+    for env_dir in ${EMGR_DIRS[@]}; do
+        if [[ -d "$env_dir" ]]; then
+            pushd "$env_dir" >&/dev/null
+            find -name '*.env.sh' -printf '  %P\n' | \
+                sed 's/\([a-zA-Z0-9]*\)\.env\.sh/\1/'
+            popd >&/dev/null
+        fi
+    done
+}
+
+function _EMGR_help() {
+    echo "Usage: emgr --clear|--reload|ENV_NAME"
+    echo "Available enviroments:"
+    _EMGR_list_envs
+    return 1
+}
+
+function emgr() {
+    if [[ $# -lt 1 ]]; then
+        _EMGR_help
+        return $?
+    fi
+
+    if [[ "$1" == "--clear" ]]; then
+        _EMGR_restore
+        rm -f "$_EMGR_env_backup"
+        unset _EMGR_env_backup
+    elif [[ "$1" == "--reload" ]]; then
+        _EMGR_reload
+    else
+        _EMGR_load $@
+    fi
+}
+
+function _EMGR_completion() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    case "$COMP_CWORD" in
+    1)
+        COMPREPLY=( $(compgen -W "--clear --reload `_EMGR_list_envs`" -- "$cur") )
+        ;;
+    esac
+}
+
+if which complete >&/dev/null; then
+    complete -F _EMGR_completion emgr
+fi

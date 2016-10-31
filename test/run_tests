@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+TEST_CASES=(
+    clear
+)
+
+if [[ "$1" == "-v" ]]; then
+    export TEST_VERBOSE=1
+fi
+
+for t in ${TEST_CASES[@]}; do
+    echo -n "$t: "
+    out_path=`mktemp`
+    if ! "$TEST_SHELL" "cases/$t" >& "$out_path"; then
+        echo "FAIL"
+        cat "$out_path"
+    else
+        echo "PASS"
+    fi
+    rm -f "$out_path"
+done

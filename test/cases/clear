@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source $TEST_DIR/test_util
+
+emgr_setup
+
+emgr alias_func_list_var
+
+myfunction
+
+emgr --clear
+
+[[ -n ${TEST1+x} ]] && tc_fail
+type myfunction && tc_fail
+type myalias && tc_fail
+
+return 0

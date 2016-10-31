@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ -n ${TEST_VERBOSE+x} ]]; then
+    set -o verbose
+fi
+
+EMGR_DIRS=( "$TEST_DIR/envs" )
+
+function tc_fail() {
+    echo "Failed!"
+    exit 1
+}
+
+function emgr_setup() {
+    source "$TEST_DIR/../emgr_setup"
+}

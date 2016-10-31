@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+function inherit_env() {
+    local env="$1" env_dir= old_env_local=
+    if [[ -n ${EMGR_ENV_LOCAL+x} ]]; then
+        old_env_local="$EMGR_ENV_LOCAL"
+    fi
+
+    for e in "${_EMGR_envs_loaded[@]}"; do
+        if [[ "$e" == "$env" ]]; then
+            echo "Error: Env $env already loaded!"
+            return 1
+        fi
+    done
+
+    for env_dir in "${EMGR_DIRS[@]}"; do
+        if [[ -d "$env_dir" && -f "$env_dir/$env.env.sh" ]]; then
+            break
+        fi
+    done
+
+    if [[ ! -f "$env_dir/$env.env.sh" ]]; then
+        echo "Error: Couldn't find env '$env'"
+        return 1
+    fi
+
+    _EMGR_envs_loaded=( "${_EMGR_envs_loaded[@]}" "$env" )
+    export EMGR_ENV_LOCAL="$env"
+    source "$env_dir/$env.env.sh" || { echo "Can't find $env.env.sh!" ; return 1 ; }
+    export EMGR_ENV_LOCAL="$old_env_local"
+    [[ -n ${EMGR_ENV_LOCAL+x} ]] && unset EMGR_ENV_LOCAL
+
+    return 0
+}
+
+_EMGR_envs_loaded=()
+inherit_env "$_EMGR_env_current"
+
+_EMGR_adjust_prompt "$_EMGR_env_current"
