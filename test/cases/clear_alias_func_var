@@ -2,6 +2,8 @@
 
 source $TEST_DIR/test_util
 
+PRESENT_ALL_TIMES=1234
+
 emgr_setup
 
 emgr alias_func_list_var
@@ -10,13 +12,15 @@ myfunction
 
 X=1
 
-check_var_set TEST1 || tc_fail
-check_var_set X || tc_fail
+fail_if_not_set PRESENT_ALL_TIMES
+fail_if_not_set TEST1
+fail_if_not_set X
 
 emgr --clear
 
-check_var_set TEST1 && tc_fail
-check_var_set X && tc_fail
+fail_if_not_set PRESENT_ALL_TIMES
+fail_if_set TEST1
+fail_if_set X
 
 type myfunction && tc_fail
 type myalias && tc_fail

@@ -11,6 +11,20 @@ function tc_fail() {
     exit 1
 }
 
+function fail_if_set() {
+    if check_var_set "$1"; then
+        echo "Error: '$1' is set, but shouldn't be:" `typeset -p "$1"`
+        exit 1
+    fi
+}
+
+function fail_if_not_set() {
+    if ! check_var_set "$1"; then
+        echo "Error: '$1' is not set, but should be:" `typeset -p "$1"`
+        exit 1
+    fi
+}
+
 function emgr_setup() {
     source "$TEST_DIR/../emgr_setup"
 }
