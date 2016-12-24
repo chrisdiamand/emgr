@@ -52,6 +52,8 @@ function _EMGR_write_env() {
             declare -p "$var_name" >> "$fname"
         fi
     done
+
+    alias -L >> "$fname"
 }
 
 # Unset every restorable function and variable
@@ -69,6 +71,8 @@ function _EMGR_clear_env() {
             unset "$var_name"
         fi
     done
+
+    unalias -m '*'
 }
 
 function _EMGR_adjust_prompt() {
