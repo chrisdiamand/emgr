@@ -77,7 +77,6 @@ function _EMGR_write_env() {
         fi
     done
 
-    echo "Write to $_EMGR_fname"
     alias >> "$_EMGR_fname"
 }
 

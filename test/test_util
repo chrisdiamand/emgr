@@ -20,7 +20,7 @@ function fail_if_set() {
 
 function fail_if_not_set() {
     if ! check_var_set "$1"; then
-        echo "Error: '$1' is not set, but should be:" `typeset -p "$1"`
+        echo "Error: '$1' is not set, but should be."
         exit 1
     fi
 }
