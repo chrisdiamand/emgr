@@ -21,7 +21,7 @@ function run_single_test {
 
     echo -n "[$test_shell] $test_case: "
     out_path=`mktemp`
-    if ! "$test_shell" "cases/$test_case" >& "$out_path"; then
+    if ! "$test_shell" "$TEST_DIR/cases/$test_case" >& "$out_path"; then
         echo "FAIL"
         cat "$out_path"
     else
