@@ -17,20 +17,24 @@ if [[ "$1" == "-v" ]]; then
 fi
 
 function run_single_test {
-    local test_shell="$1" test_case="$2"
+    local test_shell="$1" test_case="$2" ret=0
 
     echo -n "[$test_shell] $test_case: "
     out_path=`mktemp`
     if ! "$test_shell" "$TEST_DIR/cases/$test_case" >& "$out_path"; then
         echo "FAIL"
         cat "$out_path"
+        ret=1
     else
         echo "PASS"
+        ret=0
     fi
     rm -f "$out_path"
+
+    return "$ret"
 }
 
 for t in ${TEST_CASES[@]}; do
-    run_single_test bash "$t"
-    run_single_test zsh "$t"
+    run_single_test bash "$t" || break
+    run_single_test zsh "$t" || break
 done
