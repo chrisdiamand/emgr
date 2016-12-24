@@ -71,10 +71,9 @@ function _EMGR_write_env() {
 
     for _EMGR_var_name in `_EMGR_bash_list_vars`; do
         if _EMGR_should_restore_var "$_EMGR_var_name"; then
-            echo "restore var $_EMGR_var_name"
-            declare -p "$_EMGR_var_name" >> "$_EMGR_fname"
-        else
-            echo "skip $_EMGR_var_name"
+            declare -p "$_EMGR_var_name" \
+                | sed '1 s/^declare/declare -g/' \
+                >> "$_EMGR_fname"
         fi
     done
 
