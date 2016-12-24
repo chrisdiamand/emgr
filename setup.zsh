@@ -30,6 +30,10 @@ function _EMGR_should_restore_var() {
     fi
 }
 
+function _EMGR_zsh_list_vars() {
+    print -l ${(k)parameters}
+}
+
 function _EMGR_write_env() {
     local fname="$1"
     # Go through the defined functions, excluding difficult builtins,
@@ -40,7 +44,7 @@ function _EMGR_write_env() {
         fi
     done
 
-    for var_name in `print -l ${(ok)parameters}`; do
+    for _EMGR_var_name in `_EMGR_zsh_list_vars`; do
         if _EMGR_should_restore_var "$var_name"; then
             declare -p "$var_name" >> "$fname"
         fi
@@ -59,7 +63,7 @@ function _EMGR_clear_env() {
         fi
     done
 
-    for var_name in `print -l ${(ok)parameters}`; do
+    for var_name in `_EMGR_zsh_list_vars`; do
         if _EMGR_should_restore_var "$var_name"; then
             unset "$var_name"
         fi
