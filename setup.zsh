@@ -17,7 +17,7 @@ function _EMGR_should_restore_function() {
 function _EMGR_should_restore_var() {
 
     case "$1" in
-    _EMGR_env_backup)
+    _EMGR_*|EMGR_*)
         return 1
         ;;
     _*|cdpath|CDPATH|colour|_comp_setup|commands|pipestatus|\?|\*|\#|!|@|\$|ARGC|builtins|funcstack|zsh_eval_context|HISTCMD)
@@ -69,5 +69,5 @@ function _EMGR_clear_env() {
 }
 
 function _EMGR_adjust_prompt() {
-    export prompt="%{$fg_no_bold[blue]%}[$_EMGR_env_current]:%{$reset_color%}$prompt"
+    export prompt="%{$fg_no_bold[blue]%}[$EMGR_env_current]:%{$reset_color%}$prompt"
 }

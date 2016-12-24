@@ -14,7 +14,7 @@ function _EMGR_should_restore_function() {
 
 function _EMGR_should_restore_var() {
     case "$1" in
-    _EMGR_*)
+    _EMGR_*|EMGR_*)
         return 1
         ;;
     FUNCNAME|GROUPS)
@@ -85,5 +85,5 @@ function _EMGR_adjust_prompt() {
     local env_colour_start='\[\e[1;90m\]'
     local env_color_end='\[\e[0m\]'
 
-    export PS1=$env_colour_start'[$_EMGR_env_current]:'$env_colour_end$PS1
+    export PS1=$env_colour_start'[$EMGR_env_current]:'$env_colour_end$PS1
 }

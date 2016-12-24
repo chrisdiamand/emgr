@@ -41,13 +41,13 @@ function _EMGR_save() {
 }
 
 function _EMGR_load() {
-    if [[ -n ${_EMGR_env_current+x} ]]; then
+    if [[ -n ${EMGR_env_current+x} ]]; then
         _EMGR_restore
     else
         _EMGR_save
     fi
 
-    export _EMGR_env_current="$1"
+    export EMGR_env_current="$1"
 
     source "$_EMGR_install_dir/load_env"
 }
