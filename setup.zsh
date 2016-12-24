@@ -36,7 +36,7 @@ function _EMGR_zsh_list_vars() {
 }
 
 function _EMGR_write_env() {
-    local _EMGR_fname="$1"
+    local _EMGR_fname="$1" _EMGR_func_name _EMGR_var_name
     # Go through the defined functions, excluding difficult builtins,
     # completion, etc, and write out its definition.
     for _EMGR_func_name in `print -l ${(ok)functions}`; do
@@ -57,17 +57,17 @@ function _EMGR_write_env() {
 
 # Unset every restorable function and variable
 function _EMGR_clear_env() {
-    local func_name= var_name=
+    local _EMGR_func_name= _EMGR_var_name=
 
-    for func_name in `print -l ${(ok)functions}`; do
-        if _EMGR_should_restore_function "$func_name"; then
-            unset -f "$func_name"
+    for _EMGR_func_name in `print -l ${(ok)functions}`; do
+        if _EMGR_should_restore_function "$_EMGR_func_name"; then
+            unset -f "$_EMGR_func_name"
         fi
     done
 
-    for var_name in `_EMGR_zsh_list_vars`; do
-        if _EMGR_should_restore_var "$var_name"; then
-            unset "$var_name"
+    for _EMGR_var_name in `_EMGR_zsh_list_vars`; do
+        if _EMGR_should_restore_var "$_EMGR_var_name"; then
+            unset "$_EMGR_var_name"
         fi
     done
 
