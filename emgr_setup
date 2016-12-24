@@ -101,7 +101,4 @@ function _EMGR_completion() {
         ;;
     esac
 }
-
-if which complete >&/dev/null; then
-    complete -F _EMGR_completion emgr
-fi
+complete -F _EMGR_completion emgr >&/dev/null
