@@ -15,12 +15,11 @@ function _EMGR_should_restore_function() {
 }
 
 function _EMGR_should_restore_var() {
-
     case "$1" in
     _EMGR_*|EMGR_*)
         return 1
         ;;
-    _*|0|argv|cdpath|CDPATH|colour|_comp_setup|commands|pipestatus|\?|\*|\#|!|@|\$|ARGC|builtins|funcstack|zsh_eval_context|HISTCMD|parameters|compprefuncs)
+    _*|0|aliases|bg|bg_bold|bg_no_bold|bold_color|fg|fg_bold|fg_no_bold|fignore|functions|options|reset_color|saliases|OLDPWD|RANDOM|SECONDS|ZLE_*|argv|cdpath|CDPATH|colour|_comp_setup|commands|pipestatus|\?|\*|\#|!|@|\$|ARGC|builtins|funcstack|zsh_eval_context|HISTCMD|parameters|compprefuncs)
         return 1
         ;;
     esac
@@ -28,6 +27,8 @@ function _EMGR_should_restore_var() {
     if _EMGR_is_readonly_var "$1"; then
         return 1
     fi
+
+    return 0
 }
 
 function _EMGR_zsh_list_vars() {
