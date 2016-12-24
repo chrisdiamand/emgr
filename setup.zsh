@@ -20,7 +20,7 @@ function _EMGR_should_restore_var() {
     _EMGR_*|EMGR_*)
         return 1
         ;;
-    _*|cdpath|CDPATH|colour|_comp_setup|commands|pipestatus|\?|\*|\#|!|@|\$|ARGC|builtins|funcstack|zsh_eval_context|HISTCMD)
+    _*|0|argv|cdpath|CDPATH|colour|_comp_setup|commands|pipestatus|\?|\*|\#|!|@|\$|ARGC|builtins|funcstack|zsh_eval_context|HISTCMD|parameters|compprefuncs)
         return 1
         ;;
     esac
@@ -35,22 +35,23 @@ function _EMGR_zsh_list_vars() {
 }
 
 function _EMGR_write_env() {
-    local fname="$1"
+    local _EMGR_fname="$1"
     # Go through the defined functions, excluding difficult builtins,
     # completion, etc, and write out its definition.
-    for func_name in `print -l ${(ok)functions}`; do
-        if _EMGR_should_restore_function "$func_name"; then
-            type -f "$func_name" >> "$fname"
+    for _EMGR_func_name in `print -l ${(ok)functions}`; do
+        if _EMGR_should_restore_function "$_EMGR_func_name"; then
+            type -f "$_EMGR_func_name" >> "$_EMGR_fname"
         fi
     done
 
     for _EMGR_var_name in `_EMGR_zsh_list_vars`; do
-        if _EMGR_should_restore_var "$var_name"; then
-            declare -p "$var_name" >> "$fname"
+        if _EMGR_should_restore_var "$_EMGR_var_name"; then
+            declare -p "$_EMGR_var_name" \
+                >> "$_EMGR_fname"
         fi
     done
 
-    alias -L >> "$fname"
+    alias -L >> "$_EMGR_fname"
 }
 
 # Unset every restorable function and variable

@@ -10,6 +10,7 @@ fi
 
 TEST_CASES=(
     clear_alias_func_var
+    clear_then_load
 )
 
 if [[ "$1" == "-v" ]]; then

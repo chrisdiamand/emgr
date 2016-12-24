@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+source $TEST_DIR/test_util
+
+emgr_setup
+
+PRESENT_ALL_TIMES=1234
+
+echo "[1] Loading env"
+emgr alias_func_list_var
+
+fail_if_not_set TEST1
+fail_if_not_set PRESENT_ALL_TIMES
+
+echo "[1] Clearing"
+emgr --clear
+
+CREATED_AFTER_FIRST_CLEAR=5678
+
+fail_if_set TEST1
+fail_if_not_set PRESENT_ALL_TIMES
+fail_if_not_set CREATED_AFTER_FIRST_CLEAR
+
+echo "[2] Loading env"
+emgr alias_func_list_var
+
+X=3
+
+fail_if_not_set TEST1
+fail_if_not_set PRESENT_ALL_TIMES
+fail_if_not_set CREATED_AFTER_FIRST_CLEAR
+
+echo "[2] Clearing"
+emgr --clear
+
+fail_if_set X
+fail_if_set TEST1
+fail_if_not_set PRESENT_ALL_TIMES
+fail_if_not_set CREATED_AFTER_FIRST_CLEAR
+
+exit 0
