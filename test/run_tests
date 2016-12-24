@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+if [[ -n ${BASH_VERSION+x} ]]; then
+    TEST_DIR="${BASH_SOURCE[0]}"
+    TEST_DIR=`readlink -f "$TEST_DIR"`
+    export TEST_DIR=`dirname "$TEST_DIR"`
+elif [[ -n ${ZSH_VERSION+x} ]]; then
+    export TEST_DIR=${0:a:h}
+fi
+
 TEST_CASES=(
     clear
 )
@@ -8,14 +16,21 @@ if [[ "$1" == "-v" ]]; then
     export TEST_VERBOSE=1
 fi
 
-for t in ${TEST_CASES[@]}; do
-    echo -n "$t: "
+function run_single_test {
+    local test_shell="$1" test_case="$2"
+
+    echo -n "[$test_shell] $test_case: "
     out_path=`mktemp`
-    if ! "$TEST_SHELL" "cases/$t" >& "$out_path"; then
+    if ! "$test_shell" "cases/$test_case" >& "$out_path"; then
         echo "FAIL"
         cat "$out_path"
     else
         echo "PASS"
     fi
     rm -f "$out_path"
+}
+
+for t in ${TEST_CASES[@]}; do
+    run_single_test bash "$t"
+    run_single_test zsh "$t"
 done
