@@ -9,7 +9,7 @@ elif [[ -n ${ZSH_VERSION+x} ]]; then
 fi
 
 TEST_CASES=(
-    clear
+    clear_alias_func_var
 )
 
 if [[ "$1" == "-v" ]]; then
