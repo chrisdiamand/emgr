@@ -8,9 +8,16 @@ emgr alias_func_list_var
 
 myfunction
 
+X=1
+
+check_var_set TEST1 || tc_fail
+check_var_set X || tc_fail
+
 emgr --clear
 
-[[ -n ${TEST1+x} ]] && tc_fail
+check_var_set TEST1 && tc_fail
+check_var_set X && tc_fail
+
 type myfunction && tc_fail
 type myalias && tc_fail
 

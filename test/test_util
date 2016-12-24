@@ -14,3 +14,11 @@ function tc_fail() {
 function emgr_setup() {
     source "$TEST_DIR/../emgr_setup"
 }
+
+function check_var_set() {
+    if typeset -p "$1" >&/dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
