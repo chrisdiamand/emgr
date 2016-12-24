@@ -47,7 +47,11 @@ function _EMGR_write_env() {
         fi
     done
 
-    declare -p >> "$fname"
+    for var_name in `print -l ${(ok)parameters}`; do
+        if _EMGR_should_restore_var "$var_name"; then
+            declare -p "$var_name" >> "$fname"
+        fi
+    done
 }
 
 # Unset every restorable function and variable
