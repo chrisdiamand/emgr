@@ -12,6 +12,11 @@ elif [[ -n ${ZSH_VERSION+x} ]]; then
     source $_EMGR_install_dir/setup.zsh
 fi
 
+function _EMGR_is_readonly_var() {
+    (unset "$1" >&/dev/null) || return 0
+    return 1
+}
+
 function _EMGR_restore() {
     echo "Restoring from $_EMGR_env_backup"
     _EMGR_clear_env
@@ -21,6 +26,9 @@ function _EMGR_restore() {
 function _EMGR_save() {
     mkdir -p "/tmp/emgr/$USER"
     export _EMGR_env_backup=`mktemp /tmp/emgr/$USER/XXXXXXXX.sh`
+
+    echo "# env `date`" > "$_EMGR_env_backup"
+
     # Call shell-specific env-saving function
     _EMGR_write_env "$_EMGR_env_backup"
 }

@@ -14,11 +14,6 @@ function _EMGR_should_restore_function() {
     esac
 }
 
-function _EMGR_is_readonly() {
-    (unset "$1" >&/dev/null) || return 0
-    return 1
-}
-
 function _EMGR_should_restore_var() {
 
     case "$1" in
@@ -30,15 +25,13 @@ function _EMGR_should_restore_var() {
         ;;
     esac
 
-    if _EMGR_is_readonly "$1"; then
+    if _EMGR_is_readonly_var "$1"; then
         return 1
     fi
 }
 
 function _EMGR_write_env() {
     local fname="$1"
-    echo "# env `date`" > "$fname"
-
     # Go through the defined functions, excluding difficult builtins,
     # completion, etc, and write out its definition.
     for func_name in `print -l ${(ok)functions}`; do

@@ -14,4 +14,4 @@ emgr --clear
 type myfunction && tc_fail
 type myalias && tc_fail
 
-return 0
+exit 0
