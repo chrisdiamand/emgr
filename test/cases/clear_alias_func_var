@@ -12,15 +12,15 @@ myfunction
 
 X=1
 
-fail_if_not_set PRESENT_ALL_TIMES
-fail_if_not_set TEST1
-fail_if_not_set X
+fail_if_var_not_set PRESENT_ALL_TIMES
+fail_if_var_not_set TEST1
+fail_if_var_not_set X
 
 emgr --clear
 
-fail_if_not_set PRESENT_ALL_TIMES
-fail_if_set TEST1
-fail_if_set X
+fail_if_var_not_set PRESENT_ALL_TIMES
+fail_if_var_set TEST1
+fail_if_var_set X
 
 type myfunction && tc_fail
 type myalias && tc_fail
