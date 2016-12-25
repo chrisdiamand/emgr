@@ -22,7 +22,7 @@ fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_var_set TEST1
 fail_if_var_set X
 
-type myfunction && tc_fail
-type myalias && tc_fail
+fail_if_function_defined myfunction
+fail_if_alias_defined myalias
 
 exit 0
