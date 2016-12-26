@@ -32,7 +32,15 @@ function fail_if_function_defined() {
     fi
 }
 
+function fail_if_function_not_defined() {
+    if ! type "$1" >&/dev/null; then
+        echo "Error: '$1' not defined, but it should be."
+        exit 1
+    fi
+}
+
 alias fail_if_alias_defined='fail_if_function_defined'
+alias fail_if_alias_not_defined='fail_if_function_not_defined'
 
 function emgr_setup() {
     source "$TEST_DIR/../emgr_setup"

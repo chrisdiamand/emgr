@@ -6,11 +6,19 @@ emgr_setup
 
 PRESENT_ALL_TIMES=1234
 
+alias permanent_alias='ls -lh'
+
+function permanent_func() {
+    echo "Function which shouldn't be unset"
+}
+
 echo "[1] Loading env"
 emgr alias_func_list_var
 
 fail_if_var_not_set TEST1
 fail_if_var_not_set PRESENT_ALL_TIMES
+fail_if_alias_not_defined permanent_alias
+fail_if_function_not_defined permanent_func
 
 echo "[1] Clearing"
 emgr --clear
@@ -18,8 +26,12 @@ emgr --clear
 CREATED_AFTER_FIRST_CLEAR=5678
 
 fail_if_var_set TEST1
+fail_if_alias_defined myalias
+fail_if_function_defined myfunction
 fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_var_not_set CREATED_AFTER_FIRST_CLEAR
+fail_if_alias_not_defined permanent_alias
+fail_if_function_not_defined permanent_func
 
 echo "[2] Loading env"
 emgr alias_func_list_var
@@ -29,13 +41,21 @@ X=3
 fail_if_var_not_set TEST1
 fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_var_not_set CREATED_AFTER_FIRST_CLEAR
+fail_if_alias_not_defined myalias
+fail_if_function_not_defined myfunction
+fail_if_alias_not_defined permanent_alias
+fail_if_function_not_defined permanent_func
 
 echo "[2] Clearing"
 emgr --clear
 
 fail_if_var_set X
 fail_if_var_set TEST1
+fail_if_alias_defined myalias
+fail_if_function_defined myfunction
 fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_var_not_set CREATED_AFTER_FIRST_CLEAR
+fail_if_alias_not_defined permanent_alias
+fail_if_function_not_defined permanent_func
 
 exit 0
