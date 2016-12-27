@@ -5,6 +5,7 @@ source $TEST_DIR/test_util
 PRESENT_ALL_TIMES=1234
 
 export mypath="/foo:/opt/bar"
+myappendarray=(something anotheritem)
 
 emgr_setup
 
@@ -19,6 +20,7 @@ X=1
 fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_var_not_set TEST1
 fail_if_var_not_set X
+fail_if_var_not_equal '#myappendarray[@]' 5
 
 emgr --clear
 
@@ -29,5 +31,8 @@ fail_if_var_set X
 
 fail_if_function_defined myfunction
 fail_if_alias_defined myalias
+
+fail_if_var_not_equal 'myappendarray[*]' "something anotheritem"
+fail_if_var_not_equal '#myappendarray[@]' 2
 
 exit 0
