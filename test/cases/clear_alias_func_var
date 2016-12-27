@@ -4,9 +4,13 @@ source $TEST_DIR/test_util
 
 PRESENT_ALL_TIMES=1234
 
+export mypath="/foo:/opt/bar"
+
 emgr_setup
 
 emgr alias_func_list_var
+
+fail_if_var_not_equal mypath "/usr/local/added_by_env:/foo:/opt/bar"
 
 myfunction
 
@@ -18,6 +22,7 @@ fail_if_var_not_set X
 
 emgr --clear
 
+fail_if_var_not_equal mypath "/foo:/opt/bar"
 fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_var_set TEST1
 fail_if_var_set X

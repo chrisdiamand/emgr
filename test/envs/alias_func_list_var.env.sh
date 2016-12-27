@@ -10,3 +10,5 @@ MYLIST=(
     elem1
     elem2
 )
+
+export mypath="/usr/local/added_by_env:$mypath"

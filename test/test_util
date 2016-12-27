@@ -42,6 +42,18 @@ function fail_if_function_not_defined() {
 alias fail_if_alias_defined='fail_if_function_defined'
 alias fail_if_alias_not_defined='fail_if_function_not_defined'
 
+function fail_if_var_condition_true() {
+    local operator="$1" varname="$2" value="$3" curval=
+    eval "curval=\${$varname}"
+
+    if [ "$curval" $operator "$value" ]; then
+        echo "Error: '$varname' (= '$curval') $operator '$value'"
+        exit 1
+    fi
+}
+
+alias fail_if_var_not_equal='fail_if_var_condition_true !='
+
 function emgr_setup() {
     source "$TEST_DIR/../emgr_setup"
 }
