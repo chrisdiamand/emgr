@@ -70,6 +70,10 @@ function _EMGR_load() {
 }
 
 function _EMGR_clear() {
+    if [[ -z ${EMGR_ENV_CURRENT+x} ]]; then
+        echo "Error: No env loaded"
+        return 1
+    fi
     _EMGR_restore
     rm -f "$_EMGR_env_backup"
     unset _EMGR_env_backup
