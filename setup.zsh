@@ -48,6 +48,7 @@ function _EMGR_write_env() {
     for _EMGR_var_name in `_EMGR_zsh_list_vars`; do
         if _EMGR_should_restore_var "$_EMGR_var_name"; then
             declare -p "$_EMGR_var_name" \
+                | sed '1 s/^typeset/typeset -g/' \
                 >> "$_EMGR_fname"
         fi
     done
