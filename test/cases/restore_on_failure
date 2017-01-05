@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+source $TEST_DIR/test_util
+
+emgr_setup
+
+MY_VAR=3141
+
+echo "[1] Load 'fail_load' env"
+# This overwrites MY_VAR, but the original value should get restored when
+# loading fails.
+emgr fail_load
+
+echo "hi"
+
+alias
+echo "hi"
+
+fail_if_alias_defined myalias
+fail_if_var_not_equal MY_VAR 3141

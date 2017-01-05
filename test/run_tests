@@ -11,6 +11,7 @@ fi
 TEST_CASES=(
     clear_alias_func_var
     clear_then_load
+    restore_on_failure
 )
 
 if [[ "$1" == "-v" ]]; then
