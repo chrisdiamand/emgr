@@ -56,6 +56,8 @@ function _EMGR_clear_env() {
             unset "$var_name"
         fi
     done
+
+    unalias -a
 }
 
 function _EMGR_write_env() {
