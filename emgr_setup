@@ -59,6 +59,15 @@ function _EMGR_clear() {
     unset EMGR_ENV_CURRENT
 }
 
+function _EMGR_reload() {
+    if [[ -z ${EMGR_ENV_CURRENT+x} ]]; then
+        echo "Error: No env loaded"
+        return 1
+    fi
+    echo "Reloading '$EMGR_ENV_CURRENT'"
+    _EMGR_load "$EMGR_ENV_CURRENT"
+}
+
 function _EMGR_list_envs() {
     local env_dir=
     for env_dir in ${EMGR_DIRS[@]}; do
