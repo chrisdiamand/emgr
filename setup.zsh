@@ -75,5 +75,5 @@ function _EMGR_clear_env() {
 }
 
 function _EMGR_adjust_prompt() {
-    export prompt="%{$fg_no_bold[blue]%}[$EMGR_env_current]:%{$reset_color%}$prompt"
+    export prompt="%{$fg_no_bold[blue]%}[$EMGR_ENV_CURRENT]:%{$reset_color%}$prompt"
 }

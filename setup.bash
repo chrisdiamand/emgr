@@ -84,5 +84,5 @@ function _EMGR_adjust_prompt() {
     local env_colour_start='\[\e[1;90m\]'
     local env_color_end='\[\e[0m\]'
 
-    export PS1=$env_colour_start'[$EMGR_env_current]:'$env_colour_end$PS1
+    export PS1=$env_colour_start'[$EMGR_ENV_CURRENT]:'$env_colour_end$PS1
 }

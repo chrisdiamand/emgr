@@ -34,6 +34,6 @@ function inherit_env() {
 }
 
 _EMGR_envs_loaded=()
-inherit_env "$EMGR_env_current"
+inherit_env "$EMGR_ENV_CURRENT"
 
-_EMGR_adjust_prompt "$EMGR_env_current"
+_EMGR_adjust_prompt "$EMGR_ENV_CURRENT"

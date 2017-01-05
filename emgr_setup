@@ -41,13 +41,13 @@ function _EMGR_save() {
 }
 
 function _EMGR_load() {
-    if [[ -n ${EMGR_env_current+x} ]]; then
+    if [[ -n ${EMGR_ENV_CURRENT+x} ]]; then
         _EMGR_restore
     else
         _EMGR_save
     fi
 
-    export EMGR_env_current="$1"
+    export EMGR_ENV_CURRENT="$1"
 
     source "$_EMGR_install_dir/load_env"
 }
@@ -56,7 +56,7 @@ function _EMGR_clear() {
     _EMGR_restore
     rm -f "$_EMGR_env_backup"
     unset _EMGR_env_backup
-    unset EMGR_env_current
+    unset EMGR_ENV_CURRENT
 }
 
 function _EMGR_list_envs() {
