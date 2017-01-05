@@ -12,6 +12,17 @@ elif [[ -n ${ZSH_VERSION+x} ]]; then
     source $_EMGR_install_dir/setup.zsh
 fi
 
+function _EMGR_path_for_env() {
+    local env="$1" env_dir=
+    for env_dir in "${EMGR_DIRS[@]}"; do
+        if [[ -d "$env_dir" && -f "$env_dir/$env.env.sh" ]]; then
+            echo "$env_dir/$env.env.sh"
+            return 0
+        fi
+    done
+    return 1
+}
+
 function _EMGR_is_readonly_var() {
     (unset "$1" >&/dev/null) || return 0
     return 1
@@ -49,7 +60,13 @@ function _EMGR_load() {
 
     export EMGR_ENV_CURRENT="$1"
 
-    source "$_EMGR_install_dir/load_env" || _EMGR_clear
+    source "$_EMGR_install_dir/load_env"
+    _EMGR_res="$?"
+
+    if [[ "$_EMGR_res" -ne 0 ]]; then
+        echo "Error:" `_EMGR_path_for_env "$EMGR_ENV_CURRENT"` "returned $_EMGR_res"
+        _EMGR_clear
+    fi
 }
 
 function _EMGR_clear() {
