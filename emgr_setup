@@ -49,7 +49,7 @@ function _EMGR_load() {
 
     export EMGR_ENV_CURRENT="$1"
 
-    source "$_EMGR_install_dir/load_env"
+    source "$_EMGR_install_dir/load_env" || _EMGR_clear
 }
 
 function _EMGR_clear() {

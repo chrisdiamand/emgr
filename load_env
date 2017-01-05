@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function inherit_env() {
-    local env="$1" env_dir= old_env_local=
+    local env="$1" env_dir= old_env_local= err=0
     if [[ -n ${EMGR_ENV_LOCAL+x} ]]; then
         old_env_local="$EMGR_ENV_LOCAL"
     fi
@@ -26,14 +26,14 @@ function inherit_env() {
 
     _EMGR_envs_loaded=( "${_EMGR_envs_loaded[@]}" "$env" )
     export EMGR_ENV_LOCAL="$env"
-    source "$env_dir/$env.env.sh" || { echo "Can't find $env.env.sh!" ; return 1 ; }
+    source "$env_dir/$env.env.sh" || err=1
     export EMGR_ENV_LOCAL="$old_env_local"
     [[ -n ${EMGR_ENV_LOCAL+x} ]] && unset EMGR_ENV_LOCAL
 
-    return 0
+    return "$err"
 }
 
 _EMGR_envs_loaded=()
-inherit_env "$EMGR_ENV_CURRENT"
+inherit_env "$EMGR_ENV_CURRENT" || return 1
 
 _EMGR_adjust_prompt "$EMGR_ENV_CURRENT"
