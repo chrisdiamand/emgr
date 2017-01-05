@@ -4,6 +4,8 @@ if [[ -n ${TEST_VERBOSE+x} ]]; then
     set -o verbose -x
 fi
 
+shopt -s expand_aliases
+
 EMGR_DIRS=( "$TEST_DIR/envs" )
 
 function tc_fail() {

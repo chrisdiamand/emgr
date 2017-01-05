@@ -13,7 +13,7 @@ MYLIST=(
 
 myappendarray=(
     add_to_the_start
-    ${myappendarray}
+    ${myappendarray[@]}
     added_by_env
     "something with spaces"
 )
