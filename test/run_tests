@@ -11,6 +11,7 @@ fi
 TEST_CASES=(
     clear_alias_func_var
     clear_then_load
+    reload
     restore_on_failure
 )
 
