@@ -28,6 +28,8 @@ elif [[ -n ${ZSH_VERSION+x} ]]; then
     source "$_EMGR_install_dir/setup.zsh"
 fi
 
+source "$_EMGR_install_dir/utils"
+
 function _EMGR_path_for_env() {
     local env="$1" env_dir=
     for env_dir in "${EMGR_DIRS[@]}"; do
