@@ -31,6 +31,8 @@ function permanent_func() {
 echo "[1] Loading env"
 emgr alias_func_list_var
 
+fail_if_var_not_equal EMGR_ENV_CURRENT "alias_func_list_var"
+
 fail_if_var_not_set TEST1
 fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_alias_not_defined permanent_alias

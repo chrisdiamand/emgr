@@ -13,6 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+if [[ ! ( "$EMGR_ENV_LOCAL" == "alias_func_list_var" ||
+          "$EMGR_ENV_LOCAL" == "reload_env" ) ]]; then
+    tc_fail
+fi
 
 export TEST1="hello world!"
 

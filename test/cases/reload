@@ -27,6 +27,8 @@ export TEST1="different to env"
 echo "[1] Loading env 'reload_env'"
 emgr reload_env
 
+fail_if_var_set EMGR_ENV_LOCAL
+fail_if_var_not_equal EMGR_ENV_CURRENT "reload_env"
 fail_if_var_not_equal TEST1 "hello world!"
 
 export TEST1="again, different to env"
@@ -41,4 +43,6 @@ tc_symlink_env reload_env change_test1
 
 emgr --reload
 
+fail_if_var_set EMGR_ENV_LOCAL
+fail_if_var_not_equal EMGR_ENV_CURRENT "reload_env"
 fail_if_var_not_equal TEST1 "different to alias_func_list_var"
