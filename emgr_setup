@@ -21,11 +21,11 @@ if [[ -n ${BASH_VERSION+x} ]]; then
     _EMGR_install_dir=`readlink -f "$_EMGR_install_dir"`
     export _EMGR_install_dir=`dirname "$_EMGR_install_dir"`
 
-    source $_EMGR_install_dir/setup.bash
+    source "$_EMGR_install_dir/setup.bash"
 elif [[ -n ${ZSH_VERSION+x} ]]; then
     export _EMGR_install_dir=${0:a:h}
 
-    source $_EMGR_install_dir/setup.zsh
+    source "$_EMGR_install_dir/setup.zsh"
 fi
 
 function _EMGR_path_for_env() {
