@@ -16,28 +16,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-function inherit_env() {
-    local env="$1" env_path= old_env_local= err=0
+function inherit_env_path() {
+    local env_path="$1" old_env_local= err=0
     if [[ -n ${EMGR_ENV_LOCAL+x} ]]; then
         old_env_local="$EMGR_ENV_LOCAL"
     fi
 
     for e in "${_EMGR_envs_loaded[@]}"; do
-        if [[ "$e" == "$env" ]]; then
+        if [[ "$e" == "$env_path" ]]; then
             echo "Error: Env $env already loaded!"
             return 1
         fi
     done
 
-    env_path=`_EMGR_path_for_env "$env"`
-
-    if [[ -z "$env_path" ]]; then
-        echo "Error: Couldn't find env '$env'"
-        return 1
-    fi
-
-    _EMGR_envs_loaded=( "${_EMGR_envs_loaded[@]}" "$env" )
-    export EMGR_ENV_LOCAL="$env"
+    _EMGR_envs_loaded=( "${_EMGR_envs_loaded[@]}" "$env_path" )
+    export EMGR_ENV_LOCAL=`_EMGR_get_env_name_from_path "$env_path"`
     source "$env_path" || err=1
     export EMGR_ENV_LOCAL="$old_env_local"
     [[ -n ${EMGR_ENV_LOCAL+x} ]] && unset EMGR_ENV_LOCAL
@@ -45,6 +38,30 @@ function inherit_env() {
     return "$err"
 }
 
+function inherit_env() {
+    local env="$1"
+    local env_path=`_EMGR_path_for_env_relative "$env"`
+
+    if [[ -z "$env_path" ]]; then
+        echo "Error: Couldn't find env '$env'"
+        return 1
+    fi
+
+    inherit_env_path "$env_path"
+}
+
+function inherit_env_no_relative() {
+    local env="$1"
+    local env_path=`_EMGR_path_for_env_absolute "$env"`
+
+    if [[ -z "$env_path" ]]; then
+        echo "Error: Couldn't find env '$env'"
+        return 1
+    fi
+
+    inherit_env_path "$env_path"
+}
+
 _EMGR_envs_loaded=()
 
-inherit_env "$EMGR_ENV_CURRENT" && _EMGR_adjust_prompt "$EMGR_ENV_CURRENT"
+inherit_env_no_relative "$EMGR_ENV_CURRENT" && _EMGR_adjust_prompt "$EMGR_ENV_CURRENT"

@@ -30,15 +30,55 @@ fi
 
 source "$_EMGR_install_dir/utils"
 
-function _EMGR_path_for_env() {
-    local env="$1" env_dir=
+function _EMGR_get_env_name_from_path() {
+    local env_path=`_EMGR_realpath "$1"`
     for env_dir in "${EMGR_DIRS[@]}"; do
-        if [[ -d "$env_dir" && -f "$env_dir/$env.env.sh" ]]; then
-            echo "$env_dir/$env.env.sh"
+        env_dir=`_EMGR_realpath "$env_dir"`
+        if [[ "$env_path" == "$env_dir"* ]]; then
+            local rel_path="${env_path#$env_dir/}"
+            echo "${rel_path%.env.sh}"
             return 0
         fi
     done
     return 1
+}
+
+function _EMGR_get_dir_for_env_absolute() {
+    local env="$1" env_dir=
+    for env_dir in "${EMGR_DIRS[@]}"; do
+        if [[ -d "$env_dir" && -f "$env_dir/$env.env.sh" ]]; then
+            echo "$env_dir"
+            return 0
+        fi
+    done
+    return 1
+}
+
+function _EMGR_path_for_env_absolute() {
+    local env="$1"
+    local env_dir=`_EMGR_get_dir_for_env_absolute "$env"`
+
+    if [[ -n "$env_dir" ]]; then
+        echo "$env_dir/$env.env.sh"
+        return 0
+    else
+        return 1
+    fi
+}
+
+# If a matching env exists relative to the currently loaded env's path,
+# expand to the full path.
+function _EMGR_path_for_env_relative() {
+    local env="$1"
+    local current_env_dir=`_EMGR_path_for_env_absolute "$EMGR_ENV_CURRENT"`
+    current_env_dir=`dirname "$current_env_dir"`
+    local expanded_path="$current_env_dir/$env.env.sh"
+
+    if [[ -f "$expanded_path" ]]; then
+        echo "$expanded_path"
+    else
+        _EMGR_path_for_env_absolute "$env"
+    fi
 }
 
 function _EMGR_is_readonly_var() {
@@ -82,7 +122,7 @@ function _EMGR_load() {
     _EMGR_res="$?"
 
     if [[ "$_EMGR_res" -ne 0 ]]; then
-        echo "Error:" `_EMGR_path_for_env "$EMGR_ENV_CURRENT"` "returned $_EMGR_res"
+        echo "Error:" `_EMGR_path_for_env_absolute "$EMGR_ENV_CURRENT"` "returned $_EMGR_res"
         _EMGR_clear
     fi
 }
