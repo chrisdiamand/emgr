@@ -15,10 +15,12 @@
 
 fail_if_var_not_equal EMGR_ENV_LOCAL "subdir/e1"
 
-inherit_env e2_from_closest_dir
+inherit_env e2_from_closest_dir || tc_fail
+
+fail_if_var_not_equal EMGR_ENV_LOCAL "subdir/e1"
 
 export E1_VALUE="$E2_VALUE VALUE"
 
-inherit_env ../alias_func_list_var
+inherit_env ../alias_func_list_var || tc_fail
 
 myfunction

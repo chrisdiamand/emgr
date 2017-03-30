@@ -40,6 +40,8 @@ fail_if_var_not_equal '#myappendarray[@]' 5
 
 emgr --clear
 
+fail_if_var_set EMGR_ENV_LOCAL
+fail_if_var_set EMGR_ENV_CURRENT
 fail_if_var_not_equal mypath "/foo:/opt/bar"
 fail_if_var_not_set PRESENT_ALL_TIMES
 fail_if_var_set TEST1

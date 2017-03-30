@@ -70,7 +70,7 @@ function _EMGR_path_for_env_absolute() {
 # expand to the full path.
 function _EMGR_path_for_env_relative() {
     local env="$1"
-    local current_env_dir=`_EMGR_path_for_env_absolute "$EMGR_ENV_CURRENT"`
+    local current_env_dir=`_EMGR_path_for_env_absolute "$EMGR_ENV_LOCAL"`
     current_env_dir=`dirname "$current_env_dir"`
     local expanded_path="$current_env_dir/$env.env.sh"
 

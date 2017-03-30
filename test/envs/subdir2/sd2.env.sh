@@ -13,11 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-fail_if_var_not_equal EMGR_ENV_LOCAL "subdir/e2_from_closest_dir"
+fail_if_var_not_equal EMGR_ENV_LOCAL "subdir2/sd2"
 
-export E2_VALUE="CORRECT"
-
-inherit_env subdir2/sd2
-
-fail_if_var_not_set SD3_VAR
-fail_if_var_not_equal SD3_VAR "SD3"
+inherit_env sd2_samedir
