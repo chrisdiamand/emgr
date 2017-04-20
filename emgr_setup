@@ -159,6 +159,30 @@ function _EMGR_list_envs() {
     done
 }
 
+function _EMGR_edit() {
+    local env_name= env_path=
+    if [[ $# -gt 0 ]]; then
+        env_name="$1"
+    elif [[ -n ${EMGR_ENV_CURRENT+empty_if_not_set} ]]; then
+        env_name="$EMGR_ENV_CURRENT"
+    else
+        echo "Usage: emgr --edit [env_name]"
+        return 1
+    fi
+
+    env_path=`_EMGR_path_for_env_absolute "$env_name"`
+    if [[ -z "$env_path" ]]; then
+        echo "Error: Can't find env '$env_name'"
+        return 1
+    fi
+
+    if [[ -n ${EDITOR+empty_if_not_set} ]]; then
+        "$EDITOR" "$env_path"
+    elif which xdg-open>&/dev/null; then
+        xdg-open "$env_path"
+    fi
+}
+
 function _EMGR_help() {
     echo "Usage: emgr --clear|--reload|ENV_NAME"
     echo "Available enviroments:"
@@ -174,6 +198,9 @@ function emgr() {
 
     if [[ "$1" == "--clear" ]]; then
         _EMGR_clear
+    elif [[ "$1" == "--edit" ]]; then
+        shift
+        _EMGR_edit $@
     elif [[ "$1" == "--reload" ]]; then
         _EMGR_reload
     else
@@ -185,8 +212,14 @@ function _EMGR_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     case "$COMP_CWORD" in
     1)
-        COMPREPLY=( $(compgen -W "--clear --reload `_EMGR_list_envs`" -- "$cur") )
+        COMPREPLY=( $(compgen -W "--clear --edit --reload `_EMGR_list_envs`" -- "$cur") )
         ;;
+    2)
+        case "${COMP_WORDS[1]}" in
+        --edit)
+            COMPREPLY=( $(compgen -W "`_EMGR_list_envs`" -- "$cur") )
+            ;;
+        esac
     esac
 }
 complete -F _EMGR_completion emgr >&/dev/null
