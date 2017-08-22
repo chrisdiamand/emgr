@@ -18,8 +18,12 @@
 
 function inherit_env_path() {
     local env_path="$1" err=0
+    if [[ -n ${EMGR_ENV_PARENT+x} ]]; then
+        local old_env_parent="$EMGR_ENV_PARENT"
+    fi
     if [[ -n ${EMGR_ENV_LOCAL+x} ]]; then
         local old_env_local="$EMGR_ENV_LOCAL"
+        export EMGR_ENV_PARENT="$old_env_local"
     fi
 
     for e in "${_EMGR_envs_loaded[@]}"; do
@@ -38,6 +42,12 @@ function inherit_env_path() {
         export EMGR_ENV_LOCAL="$old_env_local"
     else
         unset EMGR_ENV_LOCAL
+    fi
+
+    if [[ -n ${old_env_parent+empty_if_not_set} ]]; then
+        export EMGR_ENV_PARENT="$old_env_parent"
+    else
+        unset EMGR_ENV_PARENT
     fi
 
     return "$err"

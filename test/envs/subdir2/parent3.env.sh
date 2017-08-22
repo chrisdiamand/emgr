@@ -1,0 +1,3 @@
+fail_if_var_not_equal EMGR_ENV_PARENT subdir/parent2
+fail_if_var_not_equal EMGR_ENV_LOCAL subdir2/parent3
+fail_if_var_not_equal EMGR_ENV_CURRENT parent1
