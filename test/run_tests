@@ -54,6 +54,10 @@ function run_single_test {
     return "$ret"
 }
 
+if [[ $# -gt 0 ]]; then
+    TEST_CASES=( "$@" )
+fi
+
 for t in ${TEST_CASES[@]}; do
     run_single_test bash "$t" || break
     run_single_test zsh "$t" || break
