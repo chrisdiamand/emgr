@@ -110,41 +110,44 @@ function _EMGR_save() {
 }
 
 function _EMGR_load() {
-    if [[ -n ${EMGR_ENV_CURRENT+x} ]]; then
+    if [[ -n ${EMGR_TOPLEVEL_ENVS+x} ]]; then
         _EMGR_restore
     else
         _EMGR_save
     fi
 
-    export EMGR_ENV_CURRENT="$1"
+    export EMGR_TOPLEVEL_ENVS=( "$@" )
 
     source "$_EMGR_install_dir/load_env"
     _EMGR_res="$?"
 
     if [[ "$_EMGR_res" -ne 0 ]]; then
-        echo "Error:" `_EMGR_path_for_env_absolute "$EMGR_ENV_CURRENT"` "returned $_EMGR_res"
+        echo "Error:" `_EMGR_path_for_env_absolute "$EMGR_TOPLEVEL_ENVS"` "returned $_EMGR_res"
         _EMGR_clear
+        return 1
     fi
 }
 
 function _EMGR_clear() {
-    if [[ -z ${EMGR_ENV_CURRENT+x} ]]; then
+    if [[ -z ${EMGR_TOPLEVEL_ENVS+x} ]]; then
         echo "Error: No env loaded"
         return 1
     fi
     _EMGR_restore
     rm -f "$_EMGR_env_backup"
     unset _EMGR_env_backup
+    unset EMGR_TOPLEVEL_ENVS
     unset EMGR_ENV_CURRENT
 }
 
 function _EMGR_reload() {
-    if [[ -z ${EMGR_ENV_CURRENT+x} ]]; then
+    if [[ -z ${EMGR_TOPLEVEL_ENVS+x} ]]; then
         echo "Error: No env loaded"
         return 1
     fi
-    echo "Reloading '$EMGR_ENV_CURRENT'"
-    _EMGR_load "$EMGR_ENV_CURRENT"
+    echo "Reloading '${EMGR_TOPLEVEL_ENVS[@]}'"
+    _EMGR_load "${EMGR_TOPLEVEL_ENVS[@]}"
+    return $?
 }
 
 function _EMGR_list_envs() {
@@ -163,8 +166,8 @@ function _EMGR_edit() {
     local env_name= env_path=
     if [[ $# -gt 0 ]]; then
         env_name="$1"
-    elif [[ -n ${EMGR_ENV_CURRENT+empty_if_not_set} ]]; then
-        env_name="$EMGR_ENV_CURRENT"
+    elif [[ -n ${EMGR_TOPLEVEL_ENVS+empty_if_not_set} ]]; then
+        env_name="${EMGR_TOPLEVEL_ENVS[-1]}"
     else
         echo "Usage: emgr --edit [env_name]"
         return 1
@@ -210,16 +213,14 @@ function emgr() {
 
 function _EMGR_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    case "$COMP_CWORD" in
-    1)
+    local prev=""
+    if [[ $COMP_CWORD -gt 0 ]]; then
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+    fi
+    if [[ "$prev" == "--edit" ]]; then
+        COMPREPLY=( $(compgen -W "`_EMGR_list_envs`" -- "$cur") )
+    else
         COMPREPLY=( $(compgen -W "--clear --edit --reload `_EMGR_list_envs`" -- "$cur") )
-        ;;
-    2)
-        case "${COMP_WORDS[1]}" in
-        --edit)
-            COMPREPLY=( $(compgen -W "`_EMGR_list_envs`" -- "$cur") )
-            ;;
-        esac
-    esac
+    fi
 }
 complete -F _EMGR_completion emgr >&/dev/null

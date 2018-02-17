@@ -1,4 +1,4 @@
-# Copyright 2017 Chris Diamand
+# Copyright 2017-2018 Chris Diamand
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,4 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-export TEST1="different to alias_func_list_var"
+if [[ -n ${MYVAR+empty_if_not_set} ]]; then
+    echo "Error: MYVAR already set!"
+    return 1
+fi
+
+MYVAR=10
+CHOOSE_DEFAULT_RUN=0

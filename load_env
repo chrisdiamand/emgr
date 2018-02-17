@@ -79,4 +79,18 @@ function inherit_env_no_relative() {
 
 _EMGR_envs_loaded=()
 
-inherit_env_no_relative "$EMGR_ENV_CURRENT" && _EMGR_adjust_prompt "$EMGR_ENV_CURRENT"
+EMGR_ENV_CURRENT=""
+
+for env in "${EMGR_TOPLEVEL_ENVS[@]}"; do
+    if [[ -z "$EMGR_ENV_CURRENT" ]]; then
+        EMGR_ENV_CURRENT="$env"
+    else
+        EMGR_ENV_CURRENT="$EMGR_ENV_CURRENT+$env"
+    fi
+done
+
+for env in "${EMGR_TOPLEVEL_ENVS[@]}"; do
+    inherit_env_no_relative "$env" || return 1
+done
+
+_EMGR_adjust_prompt
