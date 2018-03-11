@@ -85,7 +85,7 @@ for env in "${EMGR_TOPLEVEL_ENVS[@]}"; do
     if [[ -z "$EMGR_ENV_CURRENT" ]]; then
         EMGR_ENV_CURRENT="$env"
     else
-        EMGR_ENV_CURRENT="$EMGR_ENV_CURRENT+$env"
+        EMGR_ENV_CURRENT="$EMGR_ENV_CURRENT.$env"
     fi
 done
 
