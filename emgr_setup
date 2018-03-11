@@ -116,7 +116,7 @@ function _EMGR_load() {
         _EMGR_save
     fi
 
-    export EMGR_TOPLEVEL_ENVS=( "$@" )
+    EMGR_TOPLEVEL_ENVS=( "$@" )
 
     source "$_EMGR_install_dir/load_env"
     _EMGR_res="$?"
