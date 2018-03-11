@@ -44,4 +44,4 @@ fail_if_var_not_equal MYVAR 10
 fail_if_var_not_equal CHOOSE_DEFAULT_RUN 1
 fail_if_var_not_equal EMGR_ENV_CURRENT "override_myvar+choose_default_value"
 
-{ ! emgr choose_default_value override_myvar; } || tc_fail
+! emgr choose_default_value override_myvar

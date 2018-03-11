@@ -209,6 +209,7 @@ function emgr() {
     else
         _EMGR_load $@
     fi
+    return $?
 }
 
 function _EMGR_completion() {
@@ -223,4 +224,6 @@ function _EMGR_completion() {
         COMPREPLY=( $(compgen -W "--clear --edit --reload `_EMGR_list_envs`" -- "$cur") )
     fi
 }
-complete -F _EMGR_completion emgr >&/dev/null
+if which complete >&/dev/null; then
+    complete -F _EMGR_completion emgr >&/dev/null
+fi

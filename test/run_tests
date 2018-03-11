@@ -36,6 +36,7 @@ TEST_CASES=(
 
 if [[ "$1" == "-v" ]]; then
     export TEST_VERBOSE=1
+    shift
 fi
 
 function run_single_test {
