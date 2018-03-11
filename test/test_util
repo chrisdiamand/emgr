@@ -75,6 +75,16 @@ function fail_if_var_condition_true() {
 
 alias fail_if_var_not_equal='fail_if_var_condition_true !='
 
+function fail_if_var_not_exported() {
+    local varname="$1"
+    if python -c "import os, sys; os.environ[sys.argv[1]]" "$varname" >&/dev/null; then
+        return 0
+    else
+        echo "Error: '$varname' is not exported"
+        return 1
+    fi
+}
+
 function emgr_setup() {
     source "$TEST_DIR/../emgr_setup"
 }

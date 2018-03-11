@@ -89,6 +89,8 @@ for env in "${EMGR_TOPLEVEL_ENVS[@]}"; do
     fi
 done
 
+export EMGR_ENV_CURRENT
+
 for env in "${EMGR_TOPLEVEL_ENVS[@]}"; do
     inherit_env_no_relative "$env" || return 1
 done
