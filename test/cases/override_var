@@ -45,4 +45,7 @@ fail_if_var_not_equal CHOOSE_DEFAULT_RUN 1
 fail_if_var_not_equal EMGR_ENV_CURRENT "override_myvar.choose_default_value"
 fail_if_var_not_exported EMGR_ENV_CURRENT
 
-! emgr choose_default_value override_myvar
+if emgr choose_default_value override_myvar; then
+    echo "override_myvar should not be loaded"
+    tc_fail
+fi

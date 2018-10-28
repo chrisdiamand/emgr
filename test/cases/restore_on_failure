@@ -25,7 +25,10 @@ MY_VAR=3141
 echo "[1] Load 'fail_load' env"
 # This overwrites MY_VAR, but the original value should get restored when
 # loading fails.
-! emgr fail_load
+if emgr fail_load; then
+    echo "fail_load should not have succeeded"
+    tc_fail
+fi
 
 echo "hi"
 
