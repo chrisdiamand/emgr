@@ -17,14 +17,10 @@
 
 
 if [[ -n ${BASH_VERSION+x} ]]; then
-    _EMGR_install_dir="${BASH_SOURCE[0]}"
-    _EMGR_install_dir=`readlink -f "$_EMGR_install_dir"`
-    export _EMGR_install_dir=`dirname "$_EMGR_install_dir"`
-
+    export _EMGR_install_dir=`dirname "${BASH_SOURCE[0]}"`
     source "$_EMGR_install_dir/setup.bash"
 elif [[ -n ${ZSH_VERSION+x} ]]; then
     export _EMGR_install_dir=${0:a:h}
-
     source "$_EMGR_install_dir/setup.zsh"
 fi
 
