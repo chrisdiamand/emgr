@@ -147,12 +147,17 @@ function _EMGR_reload() {
 }
 
 function _EMGR_list_envs() {
-    local env_dir=
+    local env_dir= e=
     for env_dir in ${EMGR_DIRS[@]}; do
         if [[ -d "$env_dir" ]]; then
             pushd "$env_dir" >&/dev/null
-            find -name '*.env.sh' -printf '  %P\n' | \
-                sed 's/\([a-zA-Z0-9]*\)\.env\.sh/\1/'
+            for e in $(find . -name '*.env.sh'); do
+                # Remove preceding './' added by 'find'
+                e="${e#./}"
+                # Remove extension
+                e="${e%.env.sh}"
+                echo "  $e"
+            done
             popd >&/dev/null
         fi
     done
