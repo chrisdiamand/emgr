@@ -95,7 +95,7 @@ function _EMGR_restore() {
 
 function _EMGR_save() {
     mkdir -p "/tmp/emgr/$USER"
-    export _EMGR_env_backup=`mktemp /tmp/emgr/$USER/XXXXXXXX.sh`
+    export _EMGR_env_backup=`mktemp`
 
     echo "Saving to '$_EMGR_env_backup'"
 
