@@ -55,12 +55,7 @@ function _EMGR_bash_list_functions() {
 }
 
 function _EMGR_bash_list_vars() {
-    local _EMGR_i= _EMGR_var_name=
-    for _EMGR_i in _ {a..z} {A..Z}; do
-        for _EMGR_var_name in `eval "echo \\${!$_EMGR_i@}"`; do
-            echo "$_EMGR_var_name"
-        done
-    done
+    compgen -v
 }
 
 function _EMGR_clear_env() {
