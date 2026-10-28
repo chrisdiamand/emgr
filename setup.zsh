@@ -40,7 +40,7 @@ function _EMGR_should_restore_var() {
         ;;
     esac
 
-    if _EMGR_is_readonly_var "$1"; then
+    if [[ "${parameters[$1]}" == *readonly* ]]; then
         return 1
     fi
 
@@ -53,6 +53,7 @@ function _EMGR_zsh_list_vars() {
 
 function _EMGR_write_env() {
     local _EMGR_fname="$1" _EMGR_func_name _EMGR_var_name
+    local -a _EMGR_vars=()
     # Go through the defined functions, excluding difficult builtins,
     # completion, etc, and write out its definition.
     for _EMGR_func_name in `print -l ${(ok)functions}`; do
@@ -63,11 +64,14 @@ function _EMGR_write_env() {
 
     for _EMGR_var_name in `_EMGR_zsh_list_vars`; do
         if _EMGR_should_restore_var "$_EMGR_var_name"; then
-            declare -p "$_EMGR_var_name" \
-                | sed '1 s/^typeset/typeset -g/' \
-                >> "$_EMGR_fname"
+            _EMGR_vars+=( "$_EMGR_var_name" )
         fi
     done
+    if (( ${#_EMGR_vars[@]} )); then
+        typeset -p "${_EMGR_vars[@]}" \
+            | sed 's/^typeset /typeset -g /' \
+            >> "$_EMGR_fname"
+    fi
 
     alias -L >> "$_EMGR_fname"
 }

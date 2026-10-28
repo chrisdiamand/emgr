@@ -28,6 +28,11 @@ function _EMGR_should_restore_function() {
     return 0
 }
 
+function _EMGR_is_readonly_var() {
+    (unset "$1" >&/dev/null) || return 0
+    return 1
+}
+
 function _EMGR_should_restore_var() {
     case "$1" in
     _EMGR_*|EMGR_*)
