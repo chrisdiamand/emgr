@@ -29,6 +29,13 @@ function _EMGR_should_restore_function() {
 }
 
 function _EMGR_is_readonly_var() {
+    # Attribute expansion is available from Bash 4.4 onwards.
+    if (( BASH_VERSINFO[0] > 4 ||
+          (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] >= 4) )); then
+        [[ ${!1@a} == *r* ]]
+        return $?
+    fi
+
     (unset "$1" >&/dev/null) || return 0
     return 1
 }
@@ -38,7 +45,8 @@ function _EMGR_should_restore_var() {
     _EMGR_*|EMGR_*)
         return 1
         ;;
-    FUNCNAME|GROUPS)
+    # Bash's call-stack arrays cannot be unset despite lacking readonly flags.
+    BASH_ARGC|BASH_ARGV|BASH_LINENO|BASH_SOURCE|FUNCNAME|GROUPS)
         return 1
         ;;
     esac
@@ -80,6 +88,7 @@ function _EMGR_write_env() {
     # We have to be careful what local variables are called, because they might
     # end up being included in the list of all variables
     local _EMGR_fname="$1" _EMGR_func_name= _EMGR_var_name=
+    local -a _EMGR_vars=()
 
     for _EMGR_func_name in `_EMGR_bash_list_functions`; do
         if _EMGR_should_restore_function "$_EMGR_func_name"; then
@@ -89,11 +98,14 @@ function _EMGR_write_env() {
 
     for _EMGR_var_name in `_EMGR_bash_list_vars`; do
         if _EMGR_should_restore_var "$_EMGR_var_name"; then
-            declare -p "$_EMGR_var_name" \
-                | sed '1 s/^declare/declare -g/' \
-                >> "$_EMGR_fname"
+            _EMGR_vars+=( "$_EMGR_var_name" )
         fi
     done
+    if (( ${#_EMGR_vars[@]} )); then
+        declare -p "${_EMGR_vars[@]}" \
+            | sed 's/^declare /declare -g /' \
+            >> "$_EMGR_fname"
+    fi
 
     alias >> "$_EMGR_fname"
 }
