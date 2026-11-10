@@ -35,7 +35,7 @@ function _EMGR_should_restore_var() {
     _EMGR_*|EMGR_*)
         return 1
         ;;
-    _*|0|aliases|bg|bg_bold|bg_no_bold|bold_color|fg|fg_bold|fg_no_bold|fignore|functions|options|reset_color|saliases|OLDPWD|RANDOM|SECONDS|ZLE_*|argv|cdpath|CDPATH|colour|_comp_setup|commands|pipestatus|\?|\*|\#|!|@|\$|ARGC|builtins|funcstack|zsh_eval_context|HISTCMD|parameters|compprefuncs)
+    _*|0|aliases|bg|bg_bold|bg_no_bold|bold_color|fg|fg_bold|fg_no_bold|fignore|functions|options|reset_color|saliases|OLDPWD|RANDOM|SECONDS|ZLE_*|argv|cdpath|CDPATH|colour|_comp_setup|commands|pipestatus|\?|\*|\#|!|@|\$|ARGC|builtins|funcstack|zsh_eval_context|HISTCMD|parameters|compprefuncs|module_path|MODULE_PATH)
         return 1
         ;;
     esac
